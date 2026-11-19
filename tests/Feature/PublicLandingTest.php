@@ -24,6 +24,25 @@ class PublicLandingTest extends TestCase
         $this->get('/admin/permintaan')->assertRedirect('/login');
     }
 
+    public function test_package_image_is_displayed_above_package_details(): void
+    {
+        TreatmentPackage::create([
+            'name' => 'Pakej Dengan Gambar',
+            'price' => 88,
+            'is_active' => true,
+            'background_image' => 'packages/example.jpg',
+        ]);
+
+        $this->get('/')
+            ->assertOk()
+            ->assertSeeInOrder([
+                '<img class="public-package-cover"',
+                '<div class="public-package-details">',
+                'PAKEJ 01',
+                'Pakej Dengan Gambar',
+            ], false);
+    }
+
     public function test_landing_assets_use_forwarded_https_scheme(): void
     {
         $this->withServerVariables([
