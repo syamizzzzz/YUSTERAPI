@@ -93,6 +93,7 @@ class ManagementFlowTest extends TestCase
             ->assertSee('name="section_design[header][background_color]"', false)
             ->assertSee('name="section_design[header][overlay_color]"', false)
             ->assertSee('name="section_design[header][overlay_opacity]"', false)
+            ->assertSee('type="file" form="landing-page-form"', false)
             ->assertSee('form="landing-page-form" name="section_image_paths[header]"', false);
     }
 }

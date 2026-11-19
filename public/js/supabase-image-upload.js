@@ -6,7 +6,8 @@ document.addEventListener('DOMContentLoaded', () => {
     document.addEventListener('submit', (event) => {
         const form = event.target;
         if (!(form instanceof HTMLFormElement)) return;
-        const failedUpload = [...form.querySelectorAll('[data-supabase-image-upload]')]
+        const failedUpload = [...form.elements]
+            .filter((element) => element.matches('[data-supabase-image-upload]'))
             .find((input) => input.dataset.uploadState === 'failed' || (input.files?.length && input.dataset.uploadState !== 'complete'));
         if (!failedUpload) return;
 
@@ -25,7 +26,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!file) return;
 
             const status = document.getElementById(input.dataset.status);
-            const pathField = input.form?.querySelector(`[name="${input.dataset.target}"]`);
+            const pathField = input.form?.elements.namedItem(input.dataset.target);
             const submitButtons = [...(input.form?.querySelectorAll('button[type="submit"], button:not([type])') ?? [])];
             const oldButtonStates = submitButtons.map((button) => button.disabled);
             const showStatus = (message, state) => {
@@ -92,7 +93,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 pathField.value = signData.object_path;
                 const removeName = input.dataset.removeTarget
                     || (input.dataset.context === 'package' ? 'remove_background_image' : `remove_${input.dataset.context}`);
-                const removeCheckbox = input.form?.querySelector(`[name="${removeName}"]`);
+                const removeCheckbox = input.form?.elements.namedItem(removeName);
                 if (removeCheckbox?.checked) removeCheckbox.checked = false;
                 input.dataset.uploadState = 'complete';
                 showStatus(`Gambar berjaya dimuat naik: ${file.name}. Tekan Simpan untuk menggunakannya.`, 'success');
