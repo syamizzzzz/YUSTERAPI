@@ -6,6 +6,7 @@ use App\Models\AppointmentRequest;
 use App\Models\Booking;
 use App\Models\Customer;
 use App\Models\Payment;
+use App\Models\SiteSetting;
 use App\Models\TreatmentPackage;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -43,6 +44,23 @@ class PublicLandingTest extends TestCase
             ], false);
     }
 
+    public function test_hero_image_is_displayed_beside_the_hero_copy(): void
+    {
+        SiteSetting::create([
+            'key' => 'landing_page',
+            'value' => ['section_images' => ['hero' => 'landing/sections/hero/example.jpg']],
+        ]);
+
+        $this->get('/')
+            ->assertOk()
+            ->assertSeeInOrder([
+                'class="hero-copy"',
+                '<div class="hero-visual">',
+                'class="hero-image"',
+                'alt="Gambar muka depan YUSTERAPI"',
+            ], false);
+    }
+
     public function test_landing_assets_use_forwarded_https_scheme(): void
     {
         $this->withServerVariables([
@@ -50,7 +68,7 @@ class PublicLandingTest extends TestCase
             'HTTP_X_FORWARDED_PROTO' => 'https',
         ])->get('/')
             ->assertOk()
-            ->assertSee('href="https://localhost:8000/css/landing.css?v=2026112001"', false);
+            ->assertSee('href="https://localhost:8000/css/landing.css?v=2026112002"', false);
     }
 
     public function test_visitor_can_send_request_and_staff_can_review_it(): void
