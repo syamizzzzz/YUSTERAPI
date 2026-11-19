@@ -82,4 +82,17 @@ class ManagementFlowTest extends TestCase
             $this->get($url)->assertOk()->assertSee($field, false)->assertDontSee('@include');
         }
     }
+
+    public function test_landing_page_section_design_controls_are_associated_with_the_save_form(): void
+    {
+        $this->actingAs(User::factory()->create())
+            ->get('/landing-page')
+            ->assertOk()
+            ->assertSee('id="landing-page-form"', false)
+            ->assertSee('form="landing-page-form"', false)
+            ->assertSee('name="section_design[header][background_color]"', false)
+            ->assertSee('name="section_design[header][overlay_color]"', false)
+            ->assertSee('name="section_design[header][overlay_opacity]"', false)
+            ->assertSee('form="landing-page-form" name="section_image_paths[header]"', false);
+    }
 }
