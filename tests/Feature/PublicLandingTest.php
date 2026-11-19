@@ -24,6 +24,16 @@ class PublicLandingTest extends TestCase
         $this->get('/admin/permintaan')->assertRedirect('/login');
     }
 
+    public function test_landing_assets_use_forwarded_https_scheme(): void
+    {
+        $this->withServerVariables([
+            'REMOTE_ADDR' => '127.0.0.1',
+            'HTTP_X_FORWARDED_PROTO' => 'https',
+        ])->get('/')
+            ->assertOk()
+            ->assertSee('href="https://localhost:8000/css/landing.css"', false);
+    }
+
     public function test_visitor_can_send_request_and_staff_can_review_it(): void
     {
         $this->post('/permintaan-temu-janji', [
