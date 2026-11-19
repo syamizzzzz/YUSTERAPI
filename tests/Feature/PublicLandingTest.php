@@ -20,7 +20,7 @@ class PublicLandingTest extends TestCase
         TreatmentPackage::create(['name' => 'Pakej Aktif', 'price' => 88, 'is_active' => true]);
         TreatmentPackage::create(['name' => 'Pakej Dalaman', 'price' => 100, 'is_active' => false]);
 
-        $this->get('/')->assertOk()->assertSee('Pakej Aktif')->assertDontSee('Pakej Dalaman')->assertSee('Buat Temu Janji');
+        $this->get('/')->assertOk()->assertSee('Pakej Aktif')->assertDontSee('Pakej Dalaman')->assertSee('Buat Temu Janji')->assertDontSee('class="hero-visual"', false);
         $this->get('/admin/permintaan')->assertRedirect('/login');
     }
 
@@ -50,7 +50,7 @@ class PublicLandingTest extends TestCase
             'HTTP_X_FORWARDED_PROTO' => 'https',
         ])->get('/')
             ->assertOk()
-            ->assertSee('href="https://localhost:8000/css/landing.css"', false);
+            ->assertSee('href="https://localhost:8000/css/landing.css?v=2026112001"', false);
     }
 
     public function test_visitor_can_send_request_and_staff_can_review_it(): void
