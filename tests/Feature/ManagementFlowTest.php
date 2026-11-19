@@ -84,23 +84,38 @@ class ManagementFlowTest extends TestCase
         }
     }
 
-    public function test_landing_page_section_design_controls_are_associated_with_the_save_form(): void
+    public function test_landing_page_content_background_and_text_colors_are_grouped_by_section(): void
     {
         $this->actingAs(User::factory()->create())
             ->get('/landing-page')
             ->assertOk()
             ->assertSee('id="landing-page-form"', false)
-            ->assertSee('id="cms-design-settings"', false)
-            ->assertSee('<details class="section-design-card">', false)
-            ->assertSee('form="landing-page-form"', false)
+            ->assertSee('yusterapi.css?v=2026112001', false)
+            ->assertDontSee('id="cms-design-settings"', false)
+            ->assertDontSee('id="cms-text-colors"', false)
+            ->assertSee('<div class="section-design-card">', false)
+            ->assertDontSee('form="landing-page-form"', false)
             ->assertSee('name="section_design[header][background_color]"', false)
             ->assertSee('name="section_design[header][overlay_color]"', false)
             ->assertSee('name="section_design[header][overlay_opacity]"', false)
-            ->assertSee('type="file" form="landing-page-form"', false)
-            ->assertSee('form="landing-page-form" name="section_image_paths[header]"', false)
+            ->assertSee('name="section_image_paths[header]"', false)
             ->assertSee('data-context="section_hero"', false)
             ->assertDontSee('data-context="hero_image"', false)
-            ->assertSee('Warna tulisan (pilihan lanjut)', false);
+            ->assertSee('name="text_colors[hero_title]"', false)
+            ->assertSee('name="text_colors[about_title]"', false)
+            ->assertSee('name="text_colors[footer_headings]"', false)
+            ->assertSee('name="theme[deep]"', false)
+            ->assertSeeInOrder([
+                '<strong>Nama & logo</strong>',
+                'name="brand_name"',
+                '<strong>Edit latar belakang</strong>',
+                'name="section_design[header][background_color]"',
+                'name="text_colors[brand_name]"',
+                '<strong>Muka depan laman</strong>',
+                'name="hero_title"',
+                'name="section_design[hero][background_color]"',
+                'name="text_colors[hero_title]"',
+            ], false);
     }
 
     public function test_removing_the_hero_background_clears_legacy_hero_image(): void

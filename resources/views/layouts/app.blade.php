@@ -6,7 +6,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="supabase-upload-sign-url" content="{{ route('media.sign') }}">
     <title>@yield('title', 'Dashboard') · YUSTERAPI</title>
-    <link rel="stylesheet" href="{{ asset('css/yusterapi.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/yusterapi.css') }}?v=2026112001">
 </head>
 <body>
     <div class="app-shell">
