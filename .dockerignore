@@ -1,0 +1,12 @@
+.git
+.vercel
+.env
+.env.*
+!.env.example
+node_modules
+vendor
+tests
+database/database.sqlite
+database/database.before-supabase-20261021.sqlite
+storage/logs/*
+storage/framework/cache/data/*

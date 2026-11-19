@@ -1,0 +1,9 @@
+@extends('layouts.app')
+@section('title', 'Sejarah Kesihatan')
+@section('content')
+<div class="page-heading"><div><span class="eyebrow">REKOD SULIT STAF</span><h1>Sejarah Kesihatan</h1><p>Simpan alergi, keadaan kesihatan, ubat-ubatan dan perkara penting sebelum rawatan.</p></div></div>
+<section class="panel table-panel"><div class="panel-head"><div><span class="eyebrow">PELANGGAN</span><h2>Rekod kesihatan <span class="count-pill">{{ $customers->total() }}</span></h2></div><form class="search-form" method="get"><input name="q" value="{{ $search }}" placeholder="Cari nama, telefon atau ID..."><button class="btn btn-outline">Cari</button></form></div><div class="table-scroll"><table><thead><tr><th>ID</th><th>Pelanggan</th><th>Sejarah Kesihatan</th><th>Kemas Kini</th></tr></thead><tbody>
+@forelse($customers as $customer)<tr><td><span class="code-pill">{{ $customer->code }}</span></td><td><a class="person-link" href="{{ route('customers.show', $customer) }}">{{ $customer->name }}</a><small>{{ $customer->phone }}</small></td><td class="health-summary">{{ $customer->health_history ?: 'Belum direkodkan' }}</td><td><details class="health-edit"><summary>Edit →</summary><div class="health-edit-body"><form method="post" action="{{ route('health-history.update', $customer) }}">@csrf @method('PUT')<label>Sejarah kesihatan<textarea name="health_history" rows="6" maxlength="10000" placeholder="Alergi, penyakit, ubat-ubatan, kontraindikasi...">{{ old('health_history', $customer->health_history) }}</textarea></label><button class="btn btn-primary">Simpan Sejarah Kesihatan</button></form></div></details></td></tr>
+@empty<tr><td colspan="4" class="empty">Belum ada pelanggan. Tambah pelanggan dahulu.</td></tr>@endforelse
+</tbody></table></div><div class="pagination">{{ $customers->links() }}</div></section>
+@endsection
