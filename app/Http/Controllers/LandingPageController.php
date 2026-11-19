@@ -155,6 +155,9 @@ class LandingPageController extends Controller
             }
             unset($data[$removeField]);
         }
+        if ($request->boolean('remove_section_images.hero') || filled($request->input('section_image_paths.hero'))) {
+            $data['hero_image'] = null;
+        }
 
         DB::transaction(function () use ($data, $landingPage): void {
             $siteSetting = SiteSetting::firstOrNew(['key' => 'landing_page']);

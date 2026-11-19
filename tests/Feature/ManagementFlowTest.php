@@ -6,6 +6,7 @@ use App\Models\Booking;
 use App\Models\Customer;
 use App\Models\CustomerNote;
 use App\Models\Payment;
+use App\Models\SiteSetting;
 use App\Models\TreatmentPackage;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -89,11 +90,34 @@ class ManagementFlowTest extends TestCase
             ->get('/landing-page')
             ->assertOk()
             ->assertSee('id="landing-page-form"', false)
+            ->assertSee('id="cms-design-settings"', false)
+            ->assertSee('<details class="section-design-card">', false)
             ->assertSee('form="landing-page-form"', false)
             ->assertSee('name="section_design[header][background_color]"', false)
             ->assertSee('name="section_design[header][overlay_color]"', false)
             ->assertSee('name="section_design[header][overlay_opacity]"', false)
             ->assertSee('type="file" form="landing-page-form"', false)
-            ->assertSee('form="landing-page-form" name="section_image_paths[header]"', false);
+            ->assertSee('form="landing-page-form" name="section_image_paths[header]"', false)
+            ->assertSee('data-context="section_hero"', false)
+            ->assertDontSee('data-context="hero_image"', false)
+            ->assertSee('Warna tulisan (pilihan lanjut)', false);
+    }
+
+    public function test_removing_the_hero_background_clears_legacy_hero_image(): void
+    {
+        $this->actingAs(User::factory()->create());
+        SiteSetting::create([
+            'key' => 'landing_page',
+            'value' => ['hero_image' => 'landing/hero_image/legacy.jpg'],
+        ]);
+        $landingPage = SiteSetting::landingPage();
+
+        $this->put('/landing-page', [
+            ...$landingPage,
+            'section_image_paths' => [],
+            'remove_section_images' => ['hero' => 1],
+        ])->assertSessionHasNoErrors();
+
+        $this->assertNull(SiteSetting::landingPage()['hero_image']);
     }
 }
